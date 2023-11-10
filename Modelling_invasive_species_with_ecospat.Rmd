@@ -1,7 +1,7 @@
 ---
 title: "Niche Dynamics of Invasive Species"
 author: "Olivier Broennimann"
-date: '2023-09-15'
+date: '2023-11-10'
 output:
   pdf_document: default
   word_document: default
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # b. Niche dynamics of invasive species
 
-In this section, we will use the ecospat package to investigate the niche dynamics of an invasive species across its native and invasive ranges. We will develop the example of the spotted knapweed (*Centaurea stoebe)*, an Asteraceae native to Central and Eastern Europe. In Europe, both diploid and tetraploid cytotypes can be found, but only the tetraploids have spread to North America, where it is considered an invasive species, most presumably because of its ability to produce perenial polycarpic plants ([@treier2009],[@mráz2011]). This species served as study case upon which most of the methodological development on niche dynamics presented in this section have been based ([@broennimann2007], [@broennimann2012], [@petitpierre2012],[@guisan2014]). Note however the analyses presented here use occurrence and environmental data at a lower resolution than used in the original analyses, which can lead to slightly different results. The main idea of the niche dynamics analyses is to quantify environmental niches by investigating the occurrence density of species in a gridded climatic space allowing for direct pixel quantification and permutation tests.
+In this section, we will use the ecospat package to investigate the niche dynamics of an invasive species across its native and invasive ranges. We will develop the example of the spotted knapweed (*Centaurea stoebe)*, an Asteraceae native to Central and Eastern Europe. In Europe, both diploid and tetraploid cytotypes can be found, but only the tetraploids have spread to North America, where it is considered an invasive species, most presumably because of its ability to produce perenial polycarpic plants [@treier2009 ; @mráz2011]. This species served as study case upon which most of the methodological development on niche dynamics presented in this section have been based [@broennimann2007 ; @broennimann2012 ; @petitpierre2012 ; @guisan2014]. Note however the analyses presented here use occurrence and environmental data at a lower resolution than used in the original analyses, which can lead to slightly different results. The main idea of the niche dynamics analyses is to quantify environmental niches by investigating the occurrence density of species in a gridded climatic space allowing for direct pixel quantification and permutation tests.
 
 ## i. Data preparation
 
