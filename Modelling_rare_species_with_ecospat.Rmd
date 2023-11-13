@@ -97,7 +97,7 @@ my.ESM.EF <- ecospat.ESM.EnsembleModeling(ESM.modeling.output = my.ESM,
                                           models = NULL)
 ```
 
-ESM performances resulted from the cross-validations can be observed in the object returned by *ecospat.ESM.EnsembleModeling*.
+ESM performances resulting from the cross-validations can be observed in the object returned by *ecospat.ESM.EnsembleModeling*.
 
 ```{r, results='hide'}
 t(my.ESM.EF$ESM.evaluations)
