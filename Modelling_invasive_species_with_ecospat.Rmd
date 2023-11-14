@@ -3,13 +3,14 @@ title: "Niche Dynamics of Invasive Species"
 author: "Olivier Broennimann"
 date: '2023-11-10'
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
 bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 ```
 
 # b. Niche dynamics of invasive species
@@ -28,6 +29,7 @@ library(tidyterra)
 library(geodata)
 library(dplyr)
 library(ade4)
+library(viridis)
 ```
 
 Then we download the climatic data, here the bioclim variables of the worldclim 2.1 dataset at 10' resolution using *worldclim_global* from the *geodata* package. Note that the data is downloaded to a randomly attributed temporary local folder using *tempdir*. For computational efficiency, we aggregate the climatic data at 30' resolution (\~50 km) using *aggregate* from *terra.* The names of the worldclim layers can be renamed for easier labeling in following plots. To delimit the study area for the analyses we also download (and unzip) the geo-referenced polygons of the Terrestrial Ecoregions of the World distributed by the WWF. Function vect from terra allows to convert the polygons in a convenient vector object for further analyses, and set coordinate reference system (argument crs).
@@ -47,7 +49,9 @@ names(clim.world)<-sub("_","",names(clim.world))
 ## download Terrestrial Ecoregions of the World dataset
 
 teow.URL<-"https://storage.googleapis.com/teow2016/Ecoregions2017.zip"
-#official website for manual download: https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/6kcchn7e3u_official_teow.zip
+# official website for manual download: 
+# https://files.worldwildlife.org/wwfcmsprod/files/Publication/file
+# /6kcchn7e3u_official_teow.zip
 download.file(teow.URL,destfile = paste0(tempdir,"/TEOW.zip"))
 unzip(paste0(tempdir,"/TEOW.zip"),exdir = tempdir)
 biomes<-terra::vect(paste0(tempdir,"/Ecoregions2017.dbf"),crs="+proj=longlat")
@@ -66,10 +70,13 @@ occ.EU<-vect(occ.EU.df,geom=c("x", "y"),crs="+proj=longlat")
 # biomes
 
 buf<-buffer(occ.EU,1500000) %>% aggregate() # 1500km buffer around occurrences
-bkg<-biomes  %>% filter(BIOME_NUM%in%c(4,5,6,8,12,13)) %>% group_by(REALM) %>% summarize() %>% crop(buf) # biomes in the realm where Centaurea is present
+bkg<-biomes  %>% filter(BIOME_NUM%in%c(4,5,6,8,12,13)) %>% group_by(REALM) %>% 
+     summarize() %>% crop(buf) # biomes in the realm where Centaurea is present
 clim.EU<-crop(clim.world,bkg)
 clim.EU<-mask(clim.EU,bkg)
-plot(clim.EU[[1]], col=rainbow(100,end=0.7)[100:1],main="European background & occurrences (colors=bio1)") #plot annual temperature (bio1)
+plot(clim.EU[[1]], col=viridis(100,option="turbo",direction=-1),
+     main="European background & occurrences (colors=bio1)") 
+    #plot annual temperature (bio1)
 plot(occ.EU,cex=0.5,pch=21,alpha=0.4,add=TRUE)
 
 ## data for North America
@@ -82,10 +89,13 @@ occ.NAM<-vect(occ.NAM.df,geom=c("x", "y"),crs="+proj=longlat")
 # biomes
 
 buf<-buffer(occ.NAM,1500000) %>% aggregate()
-bkg<-biomes %>% filter(BIOME_NUM%in%c(2,4,5,6,8,12,13)) %>% group_by(REALM) %>% summarize() %>% crop(buf)
+bkg<-biomes %>% filter(BIOME_NUM%in%c(2,4,5,6,8,12,13)) %>% group_by(REALM) %>%  
+     summarize() %>% crop(buf)
 clim.NAM<-crop(clim.world,bkg)
 clim.NAM<-mask(clim.NAM,bkg)
-plot(clim.NAM[[1]], col=rainbow(100,end=0.7)[100:1],main="North American background & occurrences (colors=bio1)") #plot annual temperature (bio1)
+plot(clim.NAM[[1]], col=viridis(100,option="turbo",direction=-1),
+     main="North American background & occurrences (colors=bio1)") 
+     #plot annual temperature (bio1)
 plot(occ.NAM,cex=0.5,pch=21,alpha=0.4,add=TRUE)
 ```
 
@@ -131,8 +141,8 @@ z.NAM <- ecospat.grid.clim.dyn(glob=scores.glob,
 par(mfrow=c(1,2))
 ecospat.plot.niche(z.EU,title="Europe")
 ecospat.plot.niche(z.NAM,title="North America")
-plot(z.EU$z.uncor)
-plot(z.NAM$z.uncor)
+plot(z.EU$z.uncor,col=viridis(100,option="magma",direction = -1))
+plot(z.NAM$z.uncor,col=viridis(100,option="magma",direction = -1))
 par(mfrow=c(1,1))
 ```
 
@@ -153,13 +163,18 @@ sim.test<-ecospat.niche.similarity.test(
 sim.test$obs$D
 ```
 
-We can now investigate whether some parts of the native niche are not occupied in the invaded range, and conversely, if the species occupies new conditions in the invasive range. This can be done with the e*xpansion* , *stability* and *unfilling* indices return by the *ecospat.niche.dyn.index* function. Stability and *expansion* correspond to the percentages of pixel of the invasive niche which conditions present, and not present in the native range, respectively. *Unfilling* corresponds to the percentage of the native niche which is not present in the invaded range. The results indicate that the invasive niche of the spotted knapweed expands largely beyond conditions present in the native niche, while only a small fraction of the native niche is not occupied in the invaded ranges. It is possible to plot the e*xpansion* , *stability* and *unfilling* indices in the environmental space using the function *ecospat.plot.niche.dyn*. Using the default colors, the plot shows the niche stability in blue, niche expansion in red, and niche unfilling in green. The solid green and red contour lines indicate the extent of environmental conditions that exists in the native and invaded ranges, respectively. The dotted contour line indicates the quantile of most abundant environment in both ranges (here 50% most abundant, with *quant*=05). The densities of occurrences in the native range (argument *interest*=1) are displayed using gray shading. T
+We can now investigate whether some parts of the native niche are not occupied in the invaded range, and conversely, if the species occupies new conditions in the invasive range. This can be done with the e*xpansion* , *stability* and *unfilling* indices return by the *ecospat.niche.dyn.index* function. Stability and *expansion* correspond to the percentages of pixel of the invasive niche which conditions present, and not present in the native range, respectively. *Unfilling* corresponds to the percentage of the native niche which is not present in the invaded range. The results indicate that the invasive niche of the spotted knapweed expands largely beyond conditions present in the native niche, while only a small fraction of the native niche is not occupied in the invaded ranges. It is possible to plot the e*xpansion* , *stability* and *unfilling* indices in the environmental space using the function *ecospat.plot.niche.dyn*. The plot shows the niche stability in blue, niche expansion in orange, and niche unfilling in yellow. The solid green and red contour lines indicate the extent of environmental conditions that exists in the native and invaded ranges, respectively. The dotted contour lines indicate the quantile of most abundant environment in both ranges (here 50% most abundant, with *quant*=05). The densities of occurrences in the native range (argument *interest*=1) are displayed using gray shading. T
 
 ```{r}
 dyn<-ecospat.niche.dyn.index(z.EU,z.NAM,intersection=NA)
 dyn$dynamic.index.w
 
-ecospat.plot.niche.dyn(z.EU,z.NAM,quant=0.5,title="niche dynamics",name.axis1 ="PC1",name.axis2="PC2",interest=1)
+# colorblind friendly palette, Wong, B. (2011). Nature Methods
+pal<-c("#D55E00","#E69F00","#F0E442","#CC79A7","#009E73","#0072B2","#56B4E9")
+
+ecospat.plot.niche.dyn(z.EU,z.NAM,quant=0.5,title="niche dynamics",name.axis1 ="PC1",
+            name.axis2="PC2",interest=1,col.unf="#F0E442", col.exp="#E69F00", 
+            col.stab="#0072B2", colZ1="#009E73", colZ2="#D55E00",transparency = 40)
 ```
 
 Finally, we might wonder where are the areas predicted with a high density of occurrence by the niche quantification models. Indeed, every pixel in the geography corresponds to a predicted density of occurrence in the environmental space. The function *ecospat.niche.zProjGeo* allows to do that. It is possible to project the density of occurrence of one niche (*z* object) across its own range of calibration (e.g. for Europe using *zproj*=NULL and *env*=clim.EU) but also to project the density of occurrence to another range, here for example to project the European niche of the spotted knapweed in North America.
@@ -168,17 +183,20 @@ Similarly, we can also project niche dynamic indices in geography using the func
 
 ```{r}
 geo.z.EU<-ecospat.niche.zProjGeo(z.EU,zproj=NULL,env=clim.EU)
-plot(geo.z.EU,main="EU niche in EU")
+plot(geo.z.EU,main="EU niche in EU",col=viridis(100,option="magma",direction =-1))
 plot(occ.EU,add=TRUE,cex=0.5,pch=21,alpha=0.4)
 
 geo.z.EUtoNAM<-ecospat.niche.zProjGeo(z.EU,zproj=z.NAM,env=clim.NAM)
-plot(geo.z.EUtoNAM,main="EU niche in NAM")
+plot(geo.z.EUtoNAM,main="EU niche in NAM",col=viridis(100,option="magma",direction =-1))
 plot(occ.NAM,add=TRUE,cex=0.5,pch=21,alpha=0.4)
 
 geo.dyn<-ecospat.niche.dynIndexProjGeo(z.EU,z.NAM,proj=2,env=clim.NAM)
-plot(geo.dyn,col = c("grey", "green", "red", "blue"),
+
+plot(geo.dyn,col = c("grey", "#F0E442", "#E69F00", "#0072B2"),
      plg=list(legend=c("outside both niches", "niche unfilling", 
                        "niche expansion", "niche stability"), x="bottomleft"))
 plot(occ.NAM,add=TRUE,cex=0.5,pch=21,alpha=0.4)
 
 ```
+
+## iii. References
