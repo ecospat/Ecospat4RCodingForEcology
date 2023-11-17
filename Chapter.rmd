@@ -186,7 +186,7 @@ response.plots <- ecospat.ESM.responsePlot(ESM.EnsembleModeling.output =
                                           fixed.var.metric = 'median')
 ```
 
-To check the contribution of each variable, you can use the function *ecospat.ESM.VarContrib*. This function computes the ratio between sum of weights of bivariate models where a focal variable was used and sum of weights of bivariate models where the focal variable was not used. The ratio is corrected for the number of models with or without the focal variable. This ratio gives an indication on the proportional contribution of the variable in the final ensemble model. A value of higher than 1 indicates that the focal variable has a higher contribution than average. For the ensemble model, a weighted mean is applied among model algorithms.
+To measure the contribution of each variable, you can use the function *ecospat.ESM.VarContrib*. This function computes the ratio between sum of weights of bivariate models where a focal variable was used and sum of weights of bivariate models where the focal variable was not used. The ratio is corrected for the number of models with or without the focal variable. This ratio gives an indication on the proportional contribution of the variable in the final ensemble model. A value of higher than 1 indicates that the focal variable has a higher contribution than average. For the ensemble model, a weighted mean is applied among model algorithms.
 
 ```{r, warning=F,message=F,results=F}
 var.contrib <- ecospat.ESM.VarContrib(ESM.modeling.output = my.ESM,
@@ -199,7 +199,7 @@ library(knitr)
 kable(var.contrib, caption = "Variable contributions to ESMs", digits = 3)
 ```
 
-After checking the model performances and the response curves, models can be projected using two functions: *ecospat.ESM.Projection* which projects each bivariate model and *ecospat.ESM.EnsembleProjection* which generates the ensemble of these bivariate models. *new.env* argument allows to project models onto a new data.frame, *SpatRaster* of ecological values while *name.env* allows to give a name to the projection. Parallel computing can be enabled with the argument *parallel*
+After looking at the model performances and response curves, models can be projected using two functions: *ecospat.ESM.Projection* which projects each bivariate model and *ecospat.ESM.EnsembleProjection* which generates the ensemble of these bivariate models. *new.env* argument allows to project models onto a new data.frame, *SpatRaster* of ecological values while *name.env* allows to give a name to the projection. Parallel computing can be enabled with the argument *parallel*
 
 ```{r, results='hide', message=FALSE,warning=FALSE}
 
@@ -220,7 +220,7 @@ my.ESM.EF.proj.current <- ecospat.ESM.EnsembleProjection(
 ```
 
 ```{r}
-## projected ESM of Veronica alpina at present time
+### projected ESM of Veronica alpina at present time
 plot(my.ESM.EF.proj.current, 
      col = rev(viridis::viridis(50)))
 points(xy[sp_occ==1,],
@@ -229,7 +229,7 @@ points(xy[sp_occ==1,],
 
 ## iii. Post-modeling
 
-ESM projections can be afterwards binarized. To binarize these maps, diverse thresholds can be computed via the function *ecospat.ESM.threshold*. This function also provides evaluation scores for the full model (thus, evaluating the fit of the model but not the transferability).
+ESM projections can be afterwards binarized. To binarize these maps, diverse thresholds can be computed via the function *ecospat.ESM.threshold*. This function also provides evaluation scores for the full model (thus, evaluating the fit of the model but not its transferability).
 
 ```{r,results="hide"}
 Thr <- ecospat.ESM.threshold(ESM.EnsembleModeling.output = my.ESM.EF,
@@ -255,7 +255,7 @@ plot(my.ESM.EF.proj.current.bin)
 
 After binarizing maps, one could quantify the species range size or the occupied patches from ESM maps and IUCN criteria. In the ecospat package, the function *ecospat.rangesize* and *ecospat.occupied.patch* are made for these purposes.
 
-More precisely, *ecospat.rangesize* allows quantifying Area of Occupancy AOO and the Extent of Occurrence EOO. Numerous parameters are available and are describe when running in R ?ecospat.rangesize
+More precisely, *ecospat.rangesize* allows quantifying Area of Occupancy AOO and the Extent of Occurrence EOO. Numerous parameters are available and described in the help file.
 
 ```{r, warning=FALSE}
 rangesize <- ecospat.rangesize(my.ESM.EF.proj.current.bin,
@@ -290,11 +290,11 @@ points(xy[sp_occ==1,],col = "red",
 
 ## b. Niche dynamics of invasive species
 
-In this section, we will use the ecospat package to investigate the niche dynamics of an invasive species across its native and invasive ranges. We will develop the example of the spotted knapweed (*Centaurea stoebe)*, an Asteraceae native to Central and Eastern Europe. In Europe, both diploid and tetraploid cytotypes can be found, but only the tetraploids have spread to North America, where it is considered an invasive species, most presumably because of its ability to produce perenial polycarpic plants [@treier2009 ; @mráz2011]. This species served as study case upon which most of the methodological development on niche dynamics presented in this section have been based [@broennimann2007 ; @broennimann2012 ; @petitpierre2012 ; @guisan2014]. Note however the analyses presented here use occurrence and environmental data at a lower resolution than used in the original analyses, which can lead to slightly different results. The main idea of the niche dynamics analyses is to quantify environmental niches by investigating the occurrence density of species in a gridded climatic space allowing for direct pixel quantification and permutation tests.
+In this section, we will use the ecospat package to investigate the niche dynamics of an invasive species across its native and invasive ranges. We will develop the example of the spotted knapweed (*Centaurea stoebe)*, an Asteraceae native to Central and Eastern Europe. In Europe, both diploid and tetraploid cytotypes can be found, but only the tetraploids have spread to North America, where it is considered an invasive species, most presumably because of its ability to produce perennial polycarpic plants [@treier2009 ; @mráz2011]. This species served as a study case upon which most of the methodological development on niche dynamics presented in this section have been based [@broennimann2007 ; @broennimann2012 ; @petitpierre2012 ; @guisan2014]. Note however the analyses presented here use occurrence and environmental data at a lower resolution than used in the original analyses, which can lead to slightly different results. The main idea of the niche dynamics analyses is to quantify environmental niches by investigating the occurrence density of species in a gridded climatic space allowing for direct pixel quantification and permutation tests.
 
 ### i. Data preparation
 
-First we need to load the R packages need for the analyses. In addition to the package ecospat, the package terra is need for handling geo-referenced datasets, geodata to download the climatic dataset and dplyr to query, subset and summarize data, and ade4 to perform the ordination analyses.
+First we need to load the R packages employed for the analyses. In addition to the package *ecospat*, the package *terra* is required for handling geo-referenced datasets, the package *geodata* to download the climatic dataset, the package *dplyr* to query, subset and summarize data, and the package *ade4* to perform the ordination analyses.
 
 ```{r , results='hide', message=F, warning=F}
 # Load the needed packages
@@ -307,11 +307,12 @@ library(ade4)
 library(viridis)
 ```
 
-Then we download the climatic data, here the bioclim variables of the worldclim 2.1 dataset at 10' resolution using *worldclim_global* from the *geodata* package. Note that the data is downloaded to a randomly attributed temporary local folder using *tempdir*. For computational efficiency, we aggregate the climatic data at 30' resolution (\~50 km) using *aggregate* from *terra.* The names of the worldclim layers can be renamed for easier labeling in following plots. To delimit the study area for the analyses we also download (and unzip) the geo-referenced polygons of the Terrestrial Ecoregions of the World distributed by the WWF. Function vect from terra allows to convert the polygons in a convenient vector object for further analyses, and set coordinate reference system (argument crs).
+Then we download the climatic data, here the bioclim variables of the WorldClim v2.1 dataset at 10' resolution using *worldclim_global* from the *geodata* package. For computational efficiency, we aggregate the climatic data at 30' resolution (\~50 km) using *aggregate* from *terra.* To delimit the study area for the analyses we also download (and unzip) the geo-referenced polygons of the Terrestrial Ecoregions of the World distributed by the WWF.
 
 ```{r, results='hide', message=F, warning=F}
-
+## seed set for reproducible results
 set.seed(123)
+## create a randomly attributed temporary local folder to download the data
 tempdir<-tempdir()
 
 ## download worlclim 2.1 climate data at 10' resolution and biomes data
@@ -333,7 +334,7 @@ biomes<-terra::vect(paste0(tempdir,"/Ecoregions2017.dbf"),crs="+proj=longlat")
 
 ```
 
-We now load and prepare the data for the two regions of analysis, namely Europe, where the species is native, and North America, where the species in invasive. The occurrence data are retrieved from the extdata folder included in the *ecospat* package and converted to a convenient vector format with *vect*. We thus use only occurrences of tetraploid cytotypes to ensure a fair comparison between ranges, as diploids are absent from the North American continent . We restrict the regions of analysis (background) to the biomes where the species is present in each realm using a pipe of *dyplr* functions. The biomes selected are Temperate Broadleaf Forests (4), Temperate coniferous forests (5), Boreal Forests (6), Temperate Grasslands (8) Mediterranean Forests and woodlands (12) and Deserts (13). We further restrict the background to areas distant of less than 500 km from existing occurrences (this avoids including large regions of the Paleoarctic realm where the species does not occur in the native range). The background vector can then be used to *crop* and *mask* the climatice data. Note that the choice of the background area has important consequence on niche quantification, especially in the similarity tests presented below. The general advice in selecting the background is to include areas that are, or have been accessible to the species through dispersal during its evolutionary life [@barve2011]. We recommend to perform a sensitivity analysis on the parameters chosen for the background selection to ensure the stability and reliability of results. The plots show the background area and overlaid occurrences to visualize the final data to be analyzed.
+We now load and prepare the data for the two regions of analysis, namely Europe, where the species is native, and North America, where the species is invasive. The occurrence data are retrieved from the extdata folder included in the *ecospat* package and converted to a convenient vector format with *vect*. We thus use only occurrences of tetraploid cytotypes to ensure a fair comparison between ranges, as diploids are absent from the North American continent . We restrict the regions of analysis (background) to the biomes where the species is present in each realm using a pipe of *dyplr* functions. The biomes selected are Temperate Broadleaf Forests (4), Temperate coniferous forests (5), Boreal Forests (6), Temperate Grasslands (8) Mediterranean Forests and woodlands (12) and Deserts (13). We further restrict the background to areas distant of less than 500 km from existing occurrences (this avoids including large regions of the Paleoarctic realm where the species does not occur in the native range). The background vector can then be used to *crop* and *mask* the climatic data. Note that the choice of the background area has important consequences on niche quantification, especially in the similarity tests presented below. The general advice in selecting the background is to include areas that are, or have been accessible to the species through dispersal during its evolutionary life [@barve2011]. We recommend performing a sensitivity analysis on the parameters chosen for the background selection to ensure the stability and reliability of results. The plots show the background area and overlaid occurrences to visualize the final data to be analyzed.
 
 ```{r}
 
@@ -345,11 +346,11 @@ occ.EU<-vect(occ.EU.df,geom=c("x", "y"),crs="+proj=longlat")
 # biomes
 
 buf<-buffer(occ.EU,1500000) %>% aggregate() # 1500km buffer around occurrences
-bkg<-biomes  %>% filter(BIOME_NUM%in%c(4,5,6,8,12,13)) %>% group_by(REALM) %>% 
+bkg<-biomes  %>% filter(BIOME_NUM %in% c(4,5,6,8,12,13)) %>% group_by(REALM) %>% 
      summarize() %>% crop(buf) # biomes in the realm where Centaurea is present
 clim.EU<-crop(clim.world,bkg)
 clim.EU<-mask(clim.EU,bkg)
-plot(clim.EU[[1]], col=viridis(100,option="turbo",direction=-1),
+plot(clim.EU[[1]], col=viridis(100,option="turbo"),
      main="European background & occurrences (colors=bio1)") 
     #plot annual temperature (bio1)
 plot(occ.EU,cex=0.5,pch=21,alpha=0.4,add=TRUE)
@@ -364,11 +365,11 @@ occ.NAM<-vect(occ.NAM.df,geom=c("x", "y"),crs="+proj=longlat")
 # biomes
 
 buf<-buffer(occ.NAM,1500000) %>% aggregate()
-bkg<-biomes %>% filter(BIOME_NUM%in%c(2,4,5,6,8,12,13)) %>% group_by(REALM) %>%  
+bkg<-biomes %>% filter(BIOME_NUM %in% c(2,4,5,6,8,12,13)) %>% group_by(REALM) %>%  
      summarize() %>% crop(buf)
 clim.NAM<-crop(clim.world,bkg)
 clim.NAM<-mask(clim.NAM,bkg)
-plot(clim.NAM[[1]], col=viridis(100,option="turbo",direction=-1),
+plot(clim.NAM[[1]], col=viridis(100,option="turbo"),
      main="North American background & occurrences (colors=bio1)") 
      #plot annual temperature (bio1)
 plot(occ.NAM,cex=0.5,pch=21,alpha=0.4,add=TRUE)
@@ -376,7 +377,7 @@ plot(occ.NAM,cex=0.5,pch=21,alpha=0.4,add=TRUE)
 
 ### ii. Niche quantification
 
-The niche quantification will be performed in two-dimensional space represented by the two first components (PC1 and PC2) of a principal component analysis (PCA). We chose to use two niche axes that maximize the variation contained in the original 19 bioclim variables from the worldclim dataset, but the user could as well chose two specific variables relevant for the ecology of the species based on expert assessment. Niche quantification in one dimension is presented in a following section. To calibrate the PCA on the full extent of climatic values present in both background areas, we first join the European and North American datasets using *merge* from *terra.* We then extract the climatic values for each pixels of the global background (*clim.glob*) and for each continental background (*clim.glob.EU*, *clim.glob.NAM*), and for each set of continental occurrences (*clim.occ.EU*, *clim.occ.NAM*) using *extract* from *terra*. The PCA is calibrated on the values of the global background using *dudi.pca* from *ade4*. The function ecospat.plot.contrib allows to plot the correlation circle indicating the correlation of original variables with the principal component axes with arrows. Here PC1 is mostly (but not exclusively) correlated with precipation variables (bio12 to bio 19) while PC2 is more correlated with temperature variables (bio1 to bio11). The inertia of each principal component (similar to the variance explained in a regression model context) is also indicated. Here the combined contribution of PC1 and PC2 explains almost 80% of the climatic variation in the original dataset. The calculation of PCA scores (*li* vectors in *dudi.pca* objects) for the pixels of the backgrounds (*scores.glob, scores.glob.EU, scores.glob.NAM*) and for the occurrences (*scores.occ.EU, scores.occ.NAM*) using *suprow* from *ade4* will be useful for the next step.
+The niche quantification will be performed in two-dimensional space represented by the two first components (PC1 and PC2) of a principal component analysis (PCA). We chose to use two niche axes that maximize the variation contained in the original 19 bioclim variables from the WorldCim dataset, but the user could as well choose two specific variables relevant for the ecology of the species based on expert assessment. Niche quantification in one dimension is presented in a following section. To calibrate the PCA on the full extent of climatic values present in both background areas, we first join the European and North American datasets using *merge* from *terra.* We then extract the climatic values for each pixels of the global background (*clim.glob*), for each continental background (*clim.glob.EU*, *clim.glob.NAM*), and for each set of continental occurrences (*clim.occ.EU*, *clim.occ.NAM*) using *extract* from *terra*. The PCA is calibrated on the values of the global background using *dudi.pca* from *ade4*. The function ecospat.plot.contrib allows to plot the correlation circle indicating the correlation of original variables with the principal component axes with arrows. Here PC1 is mostly (but not exclusively) correlated with precipitation variables (bio12 to bio 19) while PC2 is more correlated with temperature variables (bio1 to bio11). The inertia of each principal component (similar to the variance explained in a regression model context) is also indicated. Here the combined contribution of PC1 and PC2 explains almost 80% of the climatic variation in the original dataset. The calculation of PCA scores (*li* vectors in *dudi.pca* objects) for the pixels of the backgrounds (*scores.glob, scores.glob.EU, scores.glob.NAM*) and for the occurrences (*scores.occ.EU, scores.occ.NAM*) using *suprow* from *ade4* will be useful for the next step.
 
 ```{r, results='hide',message=F, warning=F}
 
@@ -402,7 +403,7 @@ scores.occ.EU<-suprow(pca.env,clim.occ.EU)$li
 scores.occ.NAM<-suprow(pca.env,clim.occ.NAM)$li
 ```
 
-The following step is the core of the niche quantification analysis. The function *ecospat.grid.clim.dyn* first creates a gridded two-dimensional climatic space of RxR pixels bounded by the minimum and maximum values of the PCA scores of the background points (*score.glob*). It then uses kernel density estimation functions to calculate the density of occurrence in each pixels. The result is a grid of occurrence densities in a two-dimensional climatic space, with high values indicating the core of species niche, low values indicating the margin of the niche, and zero values indicating conditions outside of the niche. For comparison between ranges, occurrences densities are standardized between zero and one (object z.uncor). An alternative version of occurrences densities is also calculated by dividing in each pixel the occurrence density by the density of the corresponding climatic condition in the background (object z.cor return by *ecospat.grid.clim.dyn;* defined as occurrence occupancy in Broennimann et al. 2012). The function *ecospat.plot.niche* allows to plot the calculated niche as a gradient of occurrence densities (shades of gray pixels) along the two first PCA axes. The contours of all climates (black solid line) and 50% most common climates (black dashed line) are also shown. Alternatively, the niches can be directly plotted with the *plot* function as *rast* objects.
+The following step is the core of the niche quantification analysis. The function *ecospat.grid.clim.dyn* first creates a gridded two-dimensional climatic space of RxR pixels bounded by the minimum and maximum values of the PCA scores of the background points (*score.glob*). It then uses kernel density estimation functions to calculate the density of occurrence in each pixel. The result is a grid of occurrence densities in a two-dimensional climatic space, with high values indicating the core of species niche, low values indicating the margin of the niche, and zero values indicating conditions outside of the niche. For comparison between ranges, occurrences densities are standardized between zero and one (object z.uncor). An alternative version of occurrences densities is also calculated by dividing in each pixel the occurrence density by the density of the corresponding climatic condition in the background (object z.cor return by *ecospat.grid.clim.dyn;* defined as occurrence occupancy in Broennimann et al. 2012). The function *ecospat.plot.niche* allows to plot the calculated niche as a gradient of occurrence densities (shades of gray pixels) along the two first PCA axes. The contours of all climates (black solid line) and 50% most common climates (black dashed line) are also shown. Alternatively, the niches can be directly plotted with the *plot* function as *rast* objects.
 
 ```{r}
 z.EU  <- ecospat.grid.clim.dyn(glob=scores.glob, 
@@ -416,29 +417,28 @@ z.NAM <- ecospat.grid.clim.dyn(glob=scores.glob,
 par(mfrow=c(1,2))
 ecospat.plot.niche(z.EU,title="Europe")
 ecospat.plot.niche(z.NAM,title="North America")
-plot(z.EU$z.uncor,col=viridis(100,option="magma",direction = -1))
-plot(z.NAM$z.uncor,col=viridis(100,option="magma",direction = -1))
+plot(z.EU$z.uncor,col=viridis(100,option="magma",direction = -1),main="Europe")
+plot(z.NAM$z.uncor,col=viridis(100,option="magma",direction = -1),main="North America")
 par(mfrow=c(1,1))
 ```
 
-Now we can analyze the results of the niches quantification more in depth. First we want to know how much the two niches overlap. This can be achieved with the *ecospat.niche.overlap.* which calculates the Schoener's D and Hellinger I overlap indices. The parameter *cor=TRUE* allows to assess the overlap when correcting for the density of environmental conditions in the background. In our case, using cor=FALSE, we detect an overlap D of 0.36.
+We can analyze the results of the niches quantification more in depth. First we want to know how much the two niches overlap. This can be achieved with the *ecospat.niche.overlap.* which calculates the Schoener's D and Hellinger I overlap indices. The parameter *cor=TRUE* allows to assess the overlap when correcting for the density of environmental conditions in the background. In our case, using cor=FALSE, we detect an overlap D of 0.36.
 
 ```{r}
 
-ecospat.niche.overlap(z.EU,z.NAM,cor=FALSE)
+ecospat.niche.overlap(z1=z.EU,z2=z.NAM,cor=FALSE)
 ```
 
-Now we can ask the question whether the overlap measured is higher than random. This can be achieved with *ecospat.niche.equivalency.test* and *ecospat.niche.similarity.test* functions, based on [@warren2008]. The test of niche equivalency asks whether the overlap observed between the two niches is significantly higher than the overlap that one would get if the occurrences between the two niches would be randomly reallocated. On the other hand, the test of similarity asks whether the overlap observed between the two niches is significantly higher than the overlap one would get if the two niches would be randomly moved in the background space. Both tests have been implemented in *ecospat* for correspondence with [@warren2008], but the niche equivalency test almost always provide significant results even when the overlap is very low and is thus in general not informative. We thus only run the niche similarity test, with parameters *rand.type* = 1 to randomize both niches in the background, *rep*=100 to set the number of replications, *intersection*=NA to perform the randomization in global background without removing marginal environments, and using *overlap.alternative* = "higher" as the alternative hypothesis for the test (i.e. a p-value \< 0.05 indicate that the observed overlap is significantly higher than the simulated overlap from randomized niches). Here, with a p-value of 0.25, the niche similarity test indicate that the niche of the spotted knapweed in Europe and in North America do not significantly depart from similarity.
+Now we can ask the question whether the overlap measured is higher than random. This can be achieved with *ecospat.niche.equivalency.test* and *ecospat.niche.similarity.test* functions, based on [@warren2008]. The test of niche equivalency asks whether the overlap observed between the two niches is significantly higher than the overlap that one would get if the occurrences between the two niches would be randomly reallocated. On the other hand, the test of similarity asks whether the overlap observed between the two niches is significantly higher than the overlap one would get if the two niches would be randomly moved in the background space. Both tests have been implemented in *ecospat* for correspondence with [@warren2008], but the niche equivalency test almost always provides significant results even when the overlap is very low and is thus in general not informative [@collart2020; @peterson2011]. We thus only run the niche similarity test, with parameters *rand.type* = 1 to randomize both niches in the background, *rep*=100 to set the number of replications, *intersection*=NA to perform the randomization in global background without removing marginal environments, and using *overlap.alternative* = "higher" as the alternative hypothesis for the test (i.e. a p-value \< 0.05 indicate that the observed overlap is significantly higher than the simulated overlap from randomized niches). Here, with a p-value of 0.25, the niche similarity test indicates that the niche of the spotted knapweed in Europe and in North America do not significantly depart from similarity.
 
 ```{r}
-sim.test<-ecospat.niche.similarity.test(
-  z.EU,z.NAM, rand.type=1,rep=100,intersection=NA, overlap.alternative="higher")
-
+sim.test<-ecospat.niche.similarity.test(z1=z.EU,z2=z.NAM,rand.type=1,rep=100,
+                                intersection=NA, overlap.alternative="higher")
 
 sim.test$obs$D
 ```
 
-We can now investigate whether some parts of the native niche are not occupied in the invaded range, and conversely, if the species occupies new conditions in the invasive range. This can be done with the e*xpansion* , *stability* and *unfilling* indices return by the *ecospat.niche.dyn.index* function. Stability and *expansion* correspond to the percentages of pixel of the invasive niche which conditions present, and not present in the native range, respectively. *Unfilling* corresponds to the percentage of the native niche which is not present in the invaded range. The results indicate that the invasive niche of the spotted knapweed expands largely beyond conditions present in the native niche, while only a small fraction of the native niche is not occupied in the invaded ranges. It is possible to plot the e*xpansion* , *stability* and *unfilling* indices in the environmental space using the function *ecospat.plot.niche.dyn*. The plot shows the niche stability in blue, niche expansion in orange, and niche unfilling in yellow. The solid green and red contour lines indicate the extent of environmental conditions that exists in the native and invaded ranges, respectively. The dotted contour lines indicate the quantile of most abundant environment in both ranges (here 50% most abundant, with *quant*=05). The densities of occurrences in the native range (argument *interest*=1) are displayed using gray shading. T
+We can further investigate whether some parts of the native niche are not occupied in the invaded range, and conversely, if the species occupies new conditions in the invasive range. This can be done with the e*xpansion* , *stability* and *unfilling* indices returned by the *ecospat.niche.dyn.index* function. *Stability* and *expansion* correspond to the percentages of pixels of the invasive niche which conditions present, and not present in the native range, respectively. *Unfilling* corresponds to the percentage of the native niche which is not present in the invaded range. The results indicate that the invasive niche of the spotted knapweed expands largely beyond conditions present in the native niche, while only a small fraction of the native niche is not occupied in the invaded ranges. It is possible to plot the e*xpansion*, *stability* and *unfilling* indices in the environmental space using the function *ecospat.plot.niche.dyn*. The plot shows the niche stability in blue, niche expansion in orange, and niche unfilling in yellow. The solid green and red contour lines indicate the extent of environmental conditions that exist in the native and invaded ranges, respectively. The dotted contour lines indicate the quantile of the most abundant environment in both ranges (here 50% most abundant, with *quant*=05). The densities of occurrences in the native range (argument *interest*=1) are displayed using gray shading. T
 
 ```{r}
 dyn<-ecospat.niche.dyn.index(z.EU,z.NAM,intersection=NA)
@@ -454,20 +454,23 @@ ecospat.plot.niche.dyn(z.EU,z.NAM,quant=0.5,title="niche dynamics",name.axis1 ="
 
 Finally, we might wonder where are the areas predicted with a high density of occurrence by the niche quantification models. Indeed, every pixel in the geography corresponds to a predicted density of occurrence in the environmental space. The function *ecospat.niche.zProjGeo* allows to do that. It is possible to project the density of occurrence of one niche (*z* object) across its own range of calibration (e.g. for Europe using *zproj*=NULL and *env*=clim.EU) but also to project the density of occurrence to another range, here for example to project the European niche of the spotted knapweed in North America.
 
+```{r}
+geo.z.EU<-ecospat.niche.zProjGeo(z=z.EU,zproj=NULL,env=clim.EU) 
+plot(geo.z.EU,main="EU niche in EU",col=viridis(100,option="magma",direction =-1)) 
+plot(occ.EU,add=TRUE,cex=0.5,pch=21,alpha=0.4)  
+
+geo.z.EUtoNAM<-ecospat.niche.zProjGeo(z=z.EU,zproj=z.NAM,env=clim.NAM) 
+plot(geo.z.EUtoNAM,main="EU niche in NAM",col=viridis(100,option="magma",direction =-1)) 
+plot(occ.NAM,add=TRUE,cex=0.5,pch=21,alpha=0.4)  
+```
+
 Similarly, we can also project niche dynamic indices in geography using the function *ecospat.niche.dynIndexProjGeo*. The argument *proj* controls the range of projection (i.e. proj=2 for the North American range), and *env* sets the environmental *rast* object used for the projection. The results here show that a large part of the North East and Midwest, as well as smaller fragmented areas of the Rocky Mountains in the West have climatic conditions conrresponding to the native niche of spotted knapweed, but that large areas, especially in the South correspond to an expansion of the niche.
 
 ```{r}
-geo.z.EU<-ecospat.niche.zProjGeo(z.EU,zproj=NULL,env=clim.EU)
-plot(geo.z.EU,main="EU niche in EU",col=viridis(100,option="magma",direction =-1))
-plot(occ.EU,add=TRUE,cex=0.5,pch=21,alpha=0.4)
-
-geo.z.EUtoNAM<-ecospat.niche.zProjGeo(z.EU,zproj=z.NAM,env=clim.NAM)
-plot(geo.z.EUtoNAM,main="EU niche in NAM",col=viridis(100,option="magma",direction =-1))
-plot(occ.NAM,add=TRUE,cex=0.5,pch=21,alpha=0.4)
-
 geo.dyn<-ecospat.niche.dynIndexProjGeo(z.EU,z.NAM,proj=2,env=clim.NAM)
 
 plot(geo.dyn,col = c("grey", "#F0E442", "#E69F00", "#0072B2"),
+     main="niche dynamics in NAM",
      plg=list(legend=c("outside both niches", "niche unfilling", 
                        "niche expansion", "niche stability"), x="bottomleft"))
 plot(occ.NAM,add=TRUE,cex=0.5,pch=21,alpha=0.4)
