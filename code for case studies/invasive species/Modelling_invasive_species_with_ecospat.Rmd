@@ -1,10 +1,10 @@
 ---
 title: "Niche Dynamics of Invasive Species"
-author: "Olivier Broennimann"
-date: '2023-11-10'
+date: $^1$Department of Ecology and Evolution, University of Lausanne, Switzerland \newline
+      $^2$Institute of Earth Surface Dynamics, University of Lausanne, Switzerland \newline
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 bibliography: references.bib
 ---
 
