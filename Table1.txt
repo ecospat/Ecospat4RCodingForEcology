@@ -1,0 +1,68 @@
+Category	Sub category	Function	Description
+Pre-modeling	Terrain sampling preparation	ecospat.rcls.grd	Reclassifies grid files to get a combined stratification from more than one grid
+		ecospat.recstrat_prop	Performs a Random Ecologically Stratified Sampling proportional
+		ecospat.recstrat_regl	Performs a Random Ecologically Stratified Sampling equal
+	Spatial autocorrelation	ecospat.mantel.correlogram	Investigates spatial autocorrelation of environmental covariables for occurrences
+	Variable selection	ecospat.npred	Calculates the maximum number of predictors to include in the model with a desired correlation between predictors.
+		ecospat.cor.plot	Plots correlations among predictors
+	Extrapolation detection	ecospat.mess	Calculates the MESS (i.e. extrapolation) as in Maxent (Elith et al. 2010)
+		ecospat.plot.mess	Plots the MESS extrapolation index onto the geographical space.
+		ecospat.climan	Assesses the climate analogy in a univariate and multivariate environmental space
+	Niche quantification	ecospat.grid.clim.dyn	Creates a grid z of Rx R pixels (or a vector of R pixels when using scores of dimension 1 or SDM predictions) with occurrence densities, using the scores of two axes from an ordination
+		ecospat.niche.overlap	Calculates the overlap metrics D and I based on two species occurrence density grids z1 and z2 created by ecospat.grid.clim.dyn().
+		ecospat.niche.equivalency.test	Runs a niche equivalency test (warren et al. 2008) based on two species occurrence density grids.
+		ecospat.niche.similarity.test	Runs a niche similarity test (warren et al. 2008) based on two species occurrence density grids.
+		ecospat.plot.niche	Plots a niche z created by ecospat.grid.clim.dyn.
+		ecospat.plot.niche.dyn	Plots niche categories and species density.
+		ecospat.plot.contrib	Plots the contribution of the initial variables to the analysis (i.e. correlation circle). Typically these are the eigen vectors and eigen values in ordinations.
+		ecospat.plot.overlap.test	Plots a histogram of observed and randomly simulated overlaps, with p-values of equivalency or similarity tests.
+		ecospat.niche.dyn.index	Calculates niche expansion, stability and unfilling.
+		ecospat.shift.centroids	Draws arrows linking the centroid of the native and exotic (non-native) distribution (continuous line) and between native and invaded extent (dashed line).
+		ecospat.margin	Delineates the distribution's margin and its uncertainty
+		ecospat.niche.dynIndexProjGeo	Creates a raster in geography with each pixel containing a niche dynamic index
+		ecospat.niche.zProjGeo	Projects Occurrence Densities to the Geography
+		ecospat.nicheNBmean	Calculates the weighted mean niche breadth across several axes
+		ecospat.nichePOSNB	Calculates the niche breadth and niche position of taxa
+	Data preparation	ecospat.sample.envar	Extracts data from environmental table
+		ecospat.caleval	Generates an evaluation and calibration dataset with a desired ratio of disaggregation.
+		ecospat.CCV.createDataSplitTable	Creates a DataSplitTable for Community modeling
+		ecospat.occ.desaggregation	Removes species occurrences in a dataframe which are closer to each other than a specified distance threshold.
+		ecospat.rand.pseudoabsences	Randomly samples pseudo-absences from an environmental data frame covering
+Core niche modeling	Modeling of rare species	ecospat.ESM.Modeling	"Calibrates simple bivariate models as in Lomba et al. 2010; Breiner et al. 2015"
+		ecospat.ESM.EnsembleModeling	Evaluates and averages simple bivariate models to ESMs.
+		ecospat.ESM.Projection	Projects simple bivariate models into new space or time.
+		ecospat.ESM.EnsembleProjection	Projects calibrated ESMs into new space or time.
+		ecospat.ESM.responsePlot	Plots species response curve for Ensemble of Small Models
+		ecospat.ESM.threshold	Computes Thresholds to binarize Ensemble of Small Models
+		ecospat.ESM.VarContrib	Computes variables' contribution for Ensemble of Small Models
+		ecospat.Epred	Calculates the weighted mean of several predictions in dataframe format (Ensemble Models)
+		ecospat.maxentvarimport	Computes variable importance for MAXENT models
+	Community spatial predictions	ecospat.SESAM.prr	Implements the SESAM framework to predict community composition using a 'probability ranking' rule.
+		ecospat.CCV.modeling	Creates probabilistic prediction for all species based on SDMs or ESMs
+	Model evaluation	ecospat.cv.glm	Performs a K-fold and leave-one-out cross validation for GLM.
+		ecospat.permut.glm	Performs permutations to get p-values on GLM coefficients and deviance.
+		ecospat.cv.gbm	Performs a K-fold and leave-one-out cross validation for GBM.
+		ecospat.cv.me	Performs a K-fold and leave-one-out cross validation for Maxent.
+		ecospat.cv.rf	Performs a K-fold and leave-one-out cross validation for randomForest
+		ecospat.boyce	Calculates the Boyce index (hizel et al 2006) 
+		ecospat.CommunityEval	Calculates several indices of accuracy of community predictions.
+		ecospat.adj.D2.glm	Computes the D2 metric in GLM
+		ecospat.CCV.communityEvaluation.bin	Calculates a range of community evaluation metrics
+		ecospat.CCV.communityEvaluation.prob	Generates a number of community evaluation metrics directly based on the probability
+		ecospat.cohen.kappa	Calculates Kappa based on a given threshold
+		ecospat.ESM.EnsembleEvaluation	Evaluates ensemble of small models via the pooling procedure (Collart et al. 2023)
+		ecospat.max.kappa	Computes the Maximum value of Kappa
+		ecospat.max.tss	Computes the Maximum value of the True Skill Statistic
+		ecospat.meva.table	Calculates evaluation metrics based on a given threshold
+		ecospat.plot.kappa	Plots kappa value in function of the threshold value.
+		ecospat.plot.tss	plot TSS values in function of the threshold value
+		ecospat.poolingEvaluation	Uses the pooling evaluation to evaluate any models
+Post modeling	Variance partition	ecospat.varpart	Performs variance partitioning for binomial GLM based on the deviance of two groups or predicting variables.
+	Conservation	ecospat.rangesize	Quantifies the range size of a species using standard IUCN criteria
+		ecospat.occupied.patch	Determines the occupied patch of a species using standard IUCN criteria (AOO, EOO) or predictive binary maps from Species Distribution Models.
+	Other	ecospat.binary.model	Binarizes raster based on threshold
+		ecospat.mpa	Calculates the minimum predicted area
+Other functions	Co-occurrence analysis	ecospat.co-occurrence	Computes an index of co-occurrences ranging from 0 (never co-occurring) to 1 (always co-occurring).
+		ecospat.cons_Cscore	Tests for non-random patterns of species co-occurrence and calculates the C-score index for the whole community and for each species pair.
+		ecospat.Cscore	Computes and tests if C-scores higher than null model
+	Phylogenetic diversity measures	ecospat.calculate.pd	Calculates phylogenetic diversity measures (Schweiger et al. 2008)
