@@ -453,7 +453,7 @@ plot(occ.NAM,add=TRUE,cex=0.5,pch=21,alpha=0.4)
 
 Similarly, we can also project niche dynamic indices in geography using the function *ecospat.niche.dynIndexProjGeo* (Figure \@ref(fig:EUnichedyninNAM)). The argument *proj* controls the range of projection (i.e. proj=2 for the North American range), and *env* sets the environmental *rast* object used for the projection. The results here show that a large part of the North East and Midwest, as well as smaller fragmented areas of the Rocky Mountains in the West have climatic conditions corresponding to the native niche of spotted knapweed, but that large areas, especially in the South correspond to an expansion of the niche.
 
-```{r EUnichedyninNAM, fig.cap="Niche dynamics of the European niche projected in North America. Colors indicate the type of niche dynamics in regard to the European niche"}
+```{r EUnichedyninNAM, fig.cap="Niche dynamics of the European niche projected in North America. Colors indicate the type of niche dynamics in regard to the European niche."}
 geo.dyn<-ecospat.niche.dynIndexProjGeo(z.EU,z.NAM,proj=2,env=clim.NAM)
 
 plot(geo.dyn,col = c("grey", "#F0E442", "#E69F00", "#0072B2"),
