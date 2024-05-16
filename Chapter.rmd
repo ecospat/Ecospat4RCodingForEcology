@@ -421,10 +421,10 @@ sim.test<-ecospat.niche.similarity.test(z1=z.EU,z2=z.NAM,rand.type=1,rep=100,
 sim.test$obs$D
 ```
 
-We can further investigate whether some parts of the native niche are not occupied in the invaded range, and conversely, if the species occupies new conditions in the invaded range. This can be done with the e*xpansion* , *stability* and *unfilling* indices returned by the *ecospat.niche.dyn.index* function (see COUE framework in @guisan2014). *Stability* and *expansion* correspond to the percentages of pixels of the invasive niche which conditions present, and not present in the native range, respectively. *Unfilling* corresponds to the percentage of the native niche which is not present in the invaded range. The results indicate that the invasive niche of the spotted knapweed expands largely beyond conditions present in the native niche, while only a small fraction of the native niche is not occupied in the invaded ranges. It is possible to plot the *expansion*, *stability* and *unfilling* indices in the environmental space using the function *ecospat.plot.niche.dyn* (Figure \@ref(fig:USEplot)).
+We can further investigate whether some parts of the native niche are not occupied in the invaded range, and conversely, if the species occupies new conditions in the invaded range. This can be done with the *expansion* , *stability* and *unfilling* indices returned by the *ecospat.niche.dyn.index* function (see COUE framework in @guisan2014). *Stability* and *expansion* correspond to the percentages of pixels of the invasive niche which conditions present, and not present in the native range, respectively. *Unfilling* corresponds to the percentage of the native niche which is not present in the invaded range. The results indicate that the invasive niche of the spotted knapweed expands largely beyond conditions present in the native niche, while only a small fraction of the native niche is not occupied in the invaded ranges. It is possible to plot the *expansion*, *stability* and *unfilling* indices in the environmental space using the function *ecospat.plot.niche.dyn* (Figure \@ref(fig:USEplot)).
 
 ```{r USE}
-dyn<-ecospat.niche.dyn.index(z.EU,z.NAM,intersection=NA)
+dyn<-ecospat.niche.dyn.index(z.EU,z.NAM)
 dyn$dynamic.index.w
 ```
 
